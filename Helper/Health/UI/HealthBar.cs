@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-
     public Image Image;
     public Image Image2;
     public Image Background;
@@ -15,6 +14,16 @@ public class HealthBar : MonoBehaviour
     float newHealth = 1f;
 
     bool m_LockTemporaryHealth = false;
+
+    public float GetCurrentHealth()
+    {
+        return newHealth;
+    }
+
+    public float GetMaxHealth()
+    {
+        return maxHP;
+    }
 
     public void ResetMaxHealth(int health)
     {
@@ -71,6 +80,11 @@ public class HealthBar : MonoBehaviour
     }
 
     public void SetHealth(int health)
+    {
+        SetHealth((float)health);
+    }
+
+    public void SetHealth(float health)
     {
         if(m_LockTemporaryHealth)
         {

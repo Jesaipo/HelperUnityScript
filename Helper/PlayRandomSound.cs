@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class PlayRandomSound : MonoBehaviour
 {
+    public float m_DestroyTime = 4.0f;
+
     public AudioClip[] sounds;
     public bool playOnAwake = false;
     public bool useRandomPitch = false;
@@ -22,15 +24,15 @@ public class PlayRandomSound : MonoBehaviour
     }
 
     public void Play() {
-        audioSource.clip = sounds[Random.Range(0, sounds.Length)];
-        if(useRandomPitch) audioSource.pitch = Random.Range(minPitch, maxPitch);
-        if(useRandomVolume) audioSource.volume = Random.Range(minVolume, maxVolume);
+        audioSource.clip = sounds[MyRandom.GetRandomIntRange(0, sounds.Length)];
+        if(useRandomPitch) audioSource.pitch = MyRandom.GetRandomFloatRange(minPitch, maxPitch);
+        if(useRandomVolume) audioSource.volume = MyRandom.GetRandomFloatRange(minVolume, maxVolume);
         audioSource.Play();
     }
 
     public void SpawnAndPlay() {
         GameObject obj = Instantiate(gameObject, transform.position, transform.rotation);
         obj.GetComponent<PlayRandomSound>().Play();
-        Destroy(obj, 4f);
+        Destroy(obj, m_DestroyTime);
     }
 }

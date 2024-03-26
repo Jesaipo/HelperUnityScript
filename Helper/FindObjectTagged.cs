@@ -12,7 +12,7 @@ public class FindObjectTagged : MonoBehaviour
 
     private void Update()
     {
-        GameObject go = GameObject.FindGameObjectWithTag("Player");
+        GameObject go = GameObject.FindGameObjectWithTag(TagToFind);
         if(go != null)
         {
             FindedGOEvent.Invoke(go);

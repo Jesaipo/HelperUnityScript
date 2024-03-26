@@ -74,6 +74,12 @@ public class FadeHelper : MonoBehaviour
                     StartCoroutine(FadeImage(false, im));
                 }
             }
+
+            foreach (SpriteRenderer sp in GetComponentsInChildren<SpriteRenderer>())
+            {
+                    StartCoroutine(FadeSprite(false, sp));
+            }
+
             foreach (TMPro.TextMeshProUGUI text in GetComponentsInChildren<TMPro.TextMeshProUGUI>())
             {
                 StartCoroutine(FadeText(false, text));
@@ -101,6 +107,12 @@ public class FadeHelper : MonoBehaviour
                 {
                     StartCoroutine(FadeImage(true, im));
                 }
+            }
+
+
+            foreach (SpriteRenderer sp in GetComponentsInChildren<SpriteRenderer>())
+            {
+                StartCoroutine(FadeSprite(true, sp));
             }
 
             foreach (TMPro.TextMeshProUGUI text in GetComponentsInChildren<TMPro.TextMeshProUGUI>())
@@ -133,7 +145,7 @@ public class FadeHelper : MonoBehaviour
         float min = 0f;
         float max = 100f;
         FadeHelperException excp;
-        if(target.TryGetComponent<FadeHelperException>(out excp))
+        if (target.TryGetComponent<FadeHelperException>(out excp))
         {
             min = excp.m_MinAlpha;
             max = excp.m_MaxAlpha;
@@ -153,7 +165,58 @@ public class FadeHelper : MonoBehaviour
                 float alpha = min + (max - min) * (i / FadeDuration);
                 if (alpha < target.color.a)
                 {
-                    target.color = new Color(target.color.r, target.color.g, target.color.b,alpha);
+                    target.color = new Color(target.color.r, target.color.g, target.color.b, alpha);
+                }
+                yield return null;
+            }
+            target.color = new Color(target.color.r, target.color.g, target.color.b, min);
+        }
+        // fade from transparent to opaque
+        else
+        {
+            // loop over 1 second
+            for (float i = 0; i <= FadeDuration; i += Time.deltaTime)
+            {
+                // set color with i as alpha
+                //float alpha = i / FadeDuration;
+                float alpha = min + (max - min) * (i / FadeDuration);
+                if (alpha > target.color.a)
+                {
+                    target.color = new Color(target.color.r, target.color.g, target.color.b, alpha);
+                }
+                yield return null;
+            }
+            target.color = new Color(target.color.r, target.color.g, target.color.b, max);
+        }
+    }
+
+
+    IEnumerator FadeSprite(bool fadeAway, SpriteRenderer target)
+    {
+        float min = 0f;
+        float max = 100f;
+        FadeHelperException excp;
+        if (target.TryGetComponent<FadeHelperException>(out excp))
+        {
+            min = excp.m_MinAlpha;
+            max = excp.m_MaxAlpha;
+        }
+        //normalized
+        min /= 100f;
+        max /= 100f;
+        // fade from opaque to transparent
+        if (fadeAway)
+        {
+            // loop over 1 second backwards
+            for (float i = FadeDuration; i >= 0; i -= Time.deltaTime)
+            {
+                // set color with i as alpha
+
+                //float alpha = i / FadeDuration;
+                float alpha = min + (max - min) * (i / FadeDuration);
+                if (alpha < target.color.a)
+                {
+                    target.color = new Color(target.color.r, target.color.g, target.color.b, alpha);
                 }
                 yield return null;
             }
@@ -180,7 +243,6 @@ public class FadeHelper : MonoBehaviour
 
     IEnumerator FadeText(bool fadeAway, TMPro.TextMeshProUGUI target)
     {
-
         target.overrideColorTags = true;
         // fade from opaque to transparent
         if (fadeAway)

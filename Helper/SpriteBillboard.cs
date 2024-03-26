@@ -5,17 +5,34 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class SpriteBillboard : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public string m_OptionnalCameraTag = "";
 
+    public Camera m_Camera = null;
     // Update is called once per frame
     void Update()
     {
-        //transform.LookAt(Camera.current.transform);
-        //CinemachineBrain.
-        transform.LookAt(transform.position + Camera.main.transform.rotation * Vector3.forward, Camera.main.transform.rotation * Vector3.up);
+        if (m_Camera == null)
+        {
+            if (m_OptionnalCameraTag == "")
+            {
+                //Look at the main camera
+                m_Camera = Camera.main;
+            }
+            else
+            {
+                var cameras = GameObject.FindGameObjectsWithTag(m_OptionnalCameraTag);
+                foreach(GameObject go in cameras)
+                {
+                    if(go.activeSelf)
+                    {
+                        m_Camera = go.GetComponent<Camera>();
+                        break;
+                    }
+
+                }
+            }
+        }
+
+        transform.LookAt(transform.position + m_Camera.transform.rotation * Vector3.forward, m_Camera.transform.rotation * Vector3.up);
     }
 }

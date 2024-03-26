@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]
 public class SpriteFlipHelper : MonoBehaviour
 {
     public bool m_FlipGameObject = false;
     Vector3 m_PreviousPosition = Vector3.zero;
     SpriteRenderer m_Sprite;
+
+    float m_Threshold = 0.01f;
 
     // Start is called before the first frame update
     void Start()
@@ -22,7 +23,10 @@ public class SpriteFlipHelper : MonoBehaviour
         Vector3 speed = this.transform.position - m_PreviousPosition;
         if (speed != Vector3.zero)
         {
-            Flip(speed.x < 0);
+            if (Mathf.Abs(speed.x) > m_Threshold)
+            {
+                Flip(speed.x < 0);
+            }
         }
 
         m_PreviousPosition = this.transform.position;

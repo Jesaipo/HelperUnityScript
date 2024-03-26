@@ -13,6 +13,11 @@ public class TriggerColliderHelper : MonoBehaviour
     public UnityEvent OnColliderEnterEvent;
 
 
+    public void SetTagToTrigger(string tag)
+    {
+        TagToTrigger = tag;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == TagToTrigger)
